@@ -1,22 +1,32 @@
 package com.example.iozzspringbootlz;
 
+import com.example.iozzspringbootlz.db.StudentRepository;
+import org.junit.After;
 import org.junit.Test;
 import io.vavr.collection.List;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import static org.junit.Assert.*;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class StudentServiceTest1 {
-
+	@Autowired
+	private StudentRepository repository;
 	@Test
 	public void getEmptyList()
 	{
-		final StudentService service = new StudentService();
+		final StudentService service = new StudentService(repository);
 		List<Student> students = service.getStudents();
 		assertTrue(students.isEmpty());
 	}
 	@Test
 	public void addStudent()
 	{
-		final StudentService service = new StudentService();
+		final StudentService service = new StudentService(repository);
 		final Student created = service.addStudent(
 				new NewStudent("Student1", "1-2", "IP"));
 		assertNotNull(created);
@@ -25,7 +35,7 @@ public class StudentServiceTest1 {
 	@Test
 	public void addStudentIsReturned()
 	{
-		final StudentService service = new StudentService();
+		final StudentService service = new StudentService(repository);
 		final NewStudent createdNew = new NewStudent("Student1", "1-2", "IP");
 		final Student created = service.addStudent(createdNew);
 		final List<Student> students = service.getStudents();
@@ -35,7 +45,7 @@ public class StudentServiceTest1 {
 	@Test
 	public void addStudentHasNewId()
 	{
-		final StudentService service = new StudentService();
+		final StudentService service = new StudentService(repository);
 		final NewStudent createdNew1 = new NewStudent("Student1", "1-2", "IP");
 		final NewStudent createdNew2 = new NewStudent("Student2", "2-2", "IP");
 		service.addStudent(createdNew1);
@@ -43,6 +53,11 @@ public class StudentServiceTest1 {
 		final List<Student> students = service.getStudents();
 		assertEquals(2,students.size());
 		assertNotEquals(students.get(0).id,students.get(1).id);
+	}
+	@After
+	public void cleanAfterTest()
+	{
+		this.repository.deleteAll();
 	}
 
 }
