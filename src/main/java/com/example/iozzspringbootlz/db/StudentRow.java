@@ -1,9 +1,9 @@
 package com.example.iozzspringbootlz.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.example.iozzspringbootlz.Student;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class StudentRow {
@@ -13,6 +13,26 @@ public class StudentRow {
     private String name;
     private String number;
     private String grupa;
+
+    @OneToMany(mappedBy = "student")
+    private Set<ScoreRow> scores;
+
+    public Set<ScoreRow> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<ScoreRow> scores) {
+        this.scores = scores;
+    }
+
+    public Student toStudent()
+    {
+        return new Student(
+                this.getId(),
+                this.getName(),
+                this.getNumber(),
+                this.getGrupa());
+    }
 
     public long getId() {
         return id;

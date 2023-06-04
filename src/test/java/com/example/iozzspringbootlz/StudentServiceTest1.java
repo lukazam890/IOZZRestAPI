@@ -1,5 +1,6 @@
 package com.example.iozzspringbootlz;
 
+import com.example.iozzspringbootlz.db.ScoreRepository;
 import com.example.iozzspringbootlz.db.StudentRepository;
 import org.junit.After;
 import org.junit.Test;
@@ -16,17 +17,20 @@ import static org.junit.Assert.*;
 public class StudentServiceTest1 {
 	@Autowired
 	private StudentRepository repository;
+
+	@Autowired
+	private ScoreRepository scoreRepository;
 	@Test
 	public void getEmptyList()
 	{
-		final StudentService service = new StudentService(repository);
+		final StudentService service = new StudentService(repository, scoreRepository);
 		List<Student> students = service.getStudents();
 		assertTrue(students.isEmpty());
 	}
 	@Test
 	public void addStudent()
 	{
-		final StudentService service = new StudentService(repository);
+		final StudentService service = new StudentService(repository, scoreRepository);
 		final Student created = service.addStudent(
 				new NewStudent("Student1", "1-2", "IP"));
 		assertNotNull(created);
@@ -35,7 +39,7 @@ public class StudentServiceTest1 {
 	@Test
 	public void addStudentIsReturned()
 	{
-		final StudentService service = new StudentService(repository);
+		final StudentService service = new StudentService(repository, scoreRepository);
 		final NewStudent createdNew = new NewStudent("Student1", "1-2", "IP");
 		final Student created = service.addStudent(createdNew);
 		final List<Student> students = service.getStudents();
@@ -45,7 +49,7 @@ public class StudentServiceTest1 {
 	@Test
 	public void addStudentHasNewId()
 	{
-		final StudentService service = new StudentService(repository);
+		final StudentService service = new StudentService(repository, scoreRepository);
 		final NewStudent createdNew1 = new NewStudent("Student1", "1-2", "IP");
 		final NewStudent createdNew2 = new NewStudent("Student2", "2-2", "IP");
 		service.addStudent(createdNew1);

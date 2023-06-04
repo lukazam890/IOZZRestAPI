@@ -31,4 +31,23 @@ public class PunktyController {
 	{
 		return service.addStudent(student);
 	}
+
+	@RequestMapping(value = "/students/{id}/number/{number}",
+	method = RequestMethod.POST,
+	produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public Student setNumber(@PathVariable("id") long id, @PathVariable("number") String number)
+	{
+		return this.service.changeNumber(id, number).orElseThrow(
+				() -> new NoStudentException(id));
+	}
+
+	@RequestMapping(value = "/students/{id}/scores", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public int addScore(@PathVariable("id") long id, @RequestBody Score score)
+	{
+		return this.service.addScore(id, score)
+				.orElseThrow(
+						()->new NoStudentException(id));
+	}
 }
